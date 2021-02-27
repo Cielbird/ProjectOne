@@ -107,11 +107,17 @@ public class Frontend {
             System.out.println(); // Spacing
 
             // Take in user input 
-            Scanner s = new Scanner(System.in);
-            System.out.print("Which Genre Would You Like To Select/Deselect: ");
-            String choice = s.next().strip();
+            Scanner s = new Scanner(System.in).useDelimiter("\n");
+            System.out.println("Which Genre Would You Like To Select/Deselect:");
+	    String choice;
+	    if (s.hasNext()){
+		    choice = s.next().strip();
+	    } else {
+		    // End of Input Stream reached - needed for running Test class
+		    break;
+	    }
 
-            if (isNumber(choice)){
+	    if (isNumber(choice)){
                 // Convert to number
                 int genreChoice = Integer.parseInt(choice);
                 if (genreChoice < 1 || genreChoice > genres.size()) {
@@ -175,9 +181,15 @@ public class Frontend {
             System.out.println(); // Spacing
 
             // Take in user input 
-            Scanner s = new Scanner(System.in);
-            System.out.print("Which Rating Would You Like To Select/Deselect: ");
-            String choice = s.next().strip();
+            Scanner s = new Scanner(System.in).useDelimiter("\n");
+            System.out.println("Which Rating Would You Like To Select/Deselect:");
+	    String choice;
+	    if(s.hasNext()){
+		    choice = s.next();
+	    } else {
+		    // End of Input Stream reached - needed to run Test class
+		    break;
+	    }
 
             if (isNumber(choice)){
                 // Convert to number
@@ -253,9 +265,9 @@ public class Frontend {
         while(!validInput) {
             // Take in user input
             Scanner s = new Scanner(System.in);
-            System.out.print("What Would You Like To Do: ");
-            String choice = s.next().strip();
-        
+            System.out.println("What Would You Like To Do:");
+	    String choice = s.next().strip();
+
             if (choice.equals("r")){
                 // Switch to ratings mode
                 this.ratingsMode(backend);
