@@ -10,7 +10,9 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
+import java.io.Reader;
 import java.io.FileReader;
+import java.io.StringReader;
 
 public class Backend implements BackendInterface {
 	
@@ -68,13 +70,13 @@ public class Backend implements BackendInterface {
 	* with a FileReader object.
 	* @param myFileReader A reader that contains the data in CSV format.
 	*/
-	public Backend(FileReader myFileReader) {
+	public Backend(Reader myReader) {
 		// Create an instance of MovieDataReader to access its readDataSet() method
 		MovieDataReader dataReader = new MovieDataReader();
 		// Use readDataSet() to obtain a list of movies
 		List<MovieInterface> movieList;
     try {
-      movieList = dataReader.readDataSet(myFileReader);
+      movieList = dataReader.readDataSet(myReader);
       initializeBackend(movieList);
     } catch (Exception e) {
       e.printStackTrace();
