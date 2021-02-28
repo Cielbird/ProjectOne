@@ -13,6 +13,7 @@ import java.util.zip.DataFormatException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 
 public class MovieDataReader implements MovieDataReaderInterface{
 	public List<MovieInterface> readDataSet(Reader inputFileReader) throws IOException, DataFormatException{
@@ -33,9 +34,6 @@ public class MovieDataReader implements MovieDataReaderInterface{
 
         // check for columns
         ch = inputFileReader.read();
-        if((ch != 10 && ch != 13 &&  ch != -1) && !(ch >= 32 && ch <= 126)) {
-            throw new IOException();
-        }
         while(ch != 10){
             if(ch == 13){
                 // avoid carriage returns
@@ -66,9 +64,6 @@ public class MovieDataReader implements MovieDataReaderInterface{
             }
             // Continues loop
             ch = inputFileReader.read();
-            if((ch != 10 && ch != 13 &&  ch != -1) && !(ch >= 32 && ch <= 126)) {
-                throw new IOException();
-            }
         }
         // Part A copy
         if(buffer.equals("title")){
@@ -94,9 +89,6 @@ public class MovieDataReader implements MovieDataReaderInterface{
 
         // for movies
         ch = inputFileReader.read();
-        if((ch != 10 && ch != 13 &&  ch != -1) && !(ch >= 32 && ch <= 126)) {
-            throw new IOException();
-        }
         while(ch != -1){
             while(ch != 10){
                 if(ch == 13){
@@ -122,7 +114,7 @@ public class MovieDataReader implements MovieDataReaderInterface{
                             // System.out.println(buffer);
                             String[] pieces = buffer.split(",");
                             for(int i = 0;i<pieces.length;i++){
-                                genres.add(pieces[i]);
+                                genres.add(pieces[i].strip());
                             }
                             movie.setGenres(genres);
                         }
@@ -146,9 +138,6 @@ public class MovieDataReader implements MovieDataReaderInterface{
                 }
                 // to continue loop
                 ch = inputFileReader.read();
-                if((ch != 10 && ch != 13 &&  ch != -1) && !(ch >= 32 && ch <= 233)) {
-                    throw new IOException();
-                }
             }
             // catch the last bit
             if(column_index[0] == input_elements.size()){
@@ -192,10 +181,32 @@ public class MovieDataReader implements MovieDataReaderInterface{
             input_elements.clear();
             // to continue loop
             ch = inputFileReader.read();
-            if((ch != 10 && ch != 13 &&  ch != -1) && !(ch >= 32 && ch <= 126)) {
-                throw new IOException();
-            }
         }
         return output_list;
     }
+
+    // public static void main(String[] args){
+    //     List<MovieInterface> movieList = new ArrayList<MovieInterface>();
+    //     Reader string_reader;
+	// 	try {
+    //         string_reader = new StringReader(					"title,original_title,year,genre,duration,country,language,director,writer,production_company,actors,description,avg_vote\n"
+	// 				+ "The Source of Shadows,The Source of Shadows,2020,Horror,83,USA,English,\"Ryan Bury, Jennifer Bonior\",\"Jennifer Bonior, Trevor Botkin\",Four Thieves Productions,\"Ashleigh Allard, Tom Bonington, Eliane Gagnon, Marissa Kaye Grinestaff, Jenna Heffernan, Joshua Hummel, Janice Kingsley, Chris Labasbas, Jared Laufree, Dominic Lee, Vic May, Sienna Mazzone, Lizzie Mounter, Grace Mumm, Ashley Otis\",\"A series of stories woven together by one of our most primal fears, the fear of the unknown.\",3.5\n"
+	// 				+ "The Insurrection,The Insurrection,2020,Action,90,USA,English,Rene Perez,Rene Perez,,\"Michael Paré, Wilma Elles, Joseph Camilleri, Rebecca Tarabocchia, Jeanine Harrington, Malorie Glavan, Danner Boyd, Michael Cendejas, Woody Clendenen, Keely Dervin, Aaron Harvey, Tony Jackson, Michael Jarrod, Angelina Karo, Bernie Kelly\",The director of the largest media company wants to expose how left-wing powers use film to control populations.,2.9\n"
+	// 				+ "Valley Girl,Valley Girl,2020,\"Comedy, Musical, Romance\",102,USA,English,Rachel Lee Goldenberg,\"Amy Talkington, Andrew Lane\",Sneak Preview Productions,\"Jessica Rothe, Josh Whitehouse, Jessie Ennis, Ashleigh Murray, Chloe Bennet, Logan Paul, Mae Whitman, Mario Revolori, Rob Huebel, Judy Greer, Alex Lewis, Alex MacNicoll, Danny Ramirez, Andrew Kai, Allyn Rachel\",\"Set to a new wave '80s soundtrack, a pair of young lovers from different backgrounds defy their parents and friends to stay together. A musical adaptation of the 1983 film.\",5.4\n"
+	// 		);
+    //         MovieDataReader movieDataReader = new MovieDataReader();
+	// 		movieList = movieDataReader.readDataSet(string_reader);
+	// 	} catch (Exception e) {
+	// 		e.printStackTrace();
+	// 		// test failed
+	// 		System.out.println("Fail");
+	// 	}
+	// 	if (movieList.size() == 3) {
+	// 		// test passed
+	// 		System.out.println("Pass");
+	// 	} else {
+	// 		// test failed
+	// 		System.out.println("Fail");
+	// 	}
+    // } 
 }
