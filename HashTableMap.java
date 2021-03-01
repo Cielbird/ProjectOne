@@ -26,7 +26,7 @@ public class HashTableMap<KeyType, ValueType> implements MapADT<KeyType, ValueTy
 	if(containsKey(key) || key == null)
 	    return false;
         
-	int hashIndex = key.hashCode() % table.length;
+	int hashIndex = Math.abs(key.hashCode()) % table.length;
 	if(table[hashIndex] == null)
 	    table[hashIndex] = new LinkedList<KeyValuePair<KeyType, ValueType>>();
 
@@ -41,7 +41,7 @@ public class HashTableMap<KeyType, ValueType> implements MapADT<KeyType, ValueTy
     }
 
     public ValueType get(KeyType key) throws NoSuchElementException{
-	int hashCode = key.hashCode() % table.length;
+	int hashCode = Math.abs(key.hashCode()) % table.length;
 	if(table[hashCode] == null)
 	    throw new NoSuchElementException();
 	else{
@@ -66,7 +66,7 @@ public class HashTableMap<KeyType, ValueType> implements MapADT<KeyType, ValueTy
 
     
     public boolean containsKey(KeyType key){
-	int hashIndex = key.hashCode() % table.length;
+	int hashIndex = Math.abs(key.hashCode()) % table.length;
 
 	if(table[hashIndex] != null){
 	    for(KeyValuePair<KeyType, ValueType> kvp : table[hashIndex]){
@@ -78,7 +78,7 @@ public class HashTableMap<KeyType, ValueType> implements MapADT<KeyType, ValueTy
     }
 
     public ValueType remove(KeyType key){
-	int hashCode = key.hashCode() % table.length;
+	int hashCode = Math.abs(key.hashCode()) % table.length;
         for(KeyValuePair<KeyType, ValueType> kvp : table[hashCode]){
 	    if(kvp.getKey().equals(key)){
 		table[hashCode].remove(kvp);

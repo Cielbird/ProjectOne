@@ -155,12 +155,16 @@ public class TestBackend {
 					+ "The Insurrection,The Insurrection,2020,Action,90,USA,English,Rene Perez,Rene Perez,,\"Michael Paré, Wilma Elles, Joseph Camilleri, Rebecca Tarabocchia, Jeanine Harrington, Malorie Glavan, Danner Boyd, Michael Cendejas, Woody Clendenen, Keely Dervin, Aaron Harvey, Tony Jackson, Michael Jarrod, Angelina Karo, Bernie Kelly\",The director of the largest media company wants to expose how left-wing powers use film to control populations.,2.9\n"
 					+ "Valley Girl,Valley Girl,2020,\"Comedy, Musical, Romance\",102,USA,English,Rachel Lee Goldenberg,\"Amy Talkington, Andrew Lane\",Sneak Preview Productions,\"Jessica Rothe, Josh Whitehouse, Jessie Ennis, Ashleigh Murray, Chloe Bennet, Logan Paul, Mae Whitman, Mario Revolori, Rob Huebel, Judy Greer, Alex Lewis, Alex MacNicoll, Danny Ramirez, Andrew Kai, Allyn Rachel\",\"Set to a new wave '80s soundtrack, a pair of young lovers from different backgrounds defy their parents and friends to stay together. A musical adaptation of the 1983 film.\",5.4\n"
 			));
+			
+			backendToTest.addAvgRating("3");
+			backendToTest.addAvgRating("7");
+			backendToTest.addAvgRating("9");
 
 			List<String> ratingList = backendToTest.getAvgRatings();
 
-			if(ratingList.contains("3.5") 
-					&& ratingList.contains("5.4") 
-					&& ratingList.contains("2.9"))
+			if(ratingList.contains("3") 
+					&& ratingList.contains("7") 
+					&& ratingList.contains("9"))
 			{
 				// test passed
 				return true;
@@ -185,9 +189,6 @@ public class TestBackend {
 	 */
 	public boolean testAddGenre() {
 		try{
-//			if(!this.testGetAllGenres()){
-//				return false;
-//			}
 
 			// instantiate once BackendInterface is implemented
 			BackendInterface backendToTest = new Backend(new StringReader(
@@ -198,18 +199,21 @@ public class TestBackend {
 			));
 			
 			backendToTest.addGenre("Adventure");
+			backendToTest.addGenre("Comedy");
+			backendToTest.addGenre("Horror");
 			
-			if (backendToTest.getAllGenres().size() == 6
-					&& backendToTest.getAllGenres().contains("Horror")
-					&& backendToTest.getAllGenres().contains("Action")
-					&& backendToTest.getAllGenres().contains("Adventure")
-					&& backendToTest.getAllGenres().contains("Comedy")
-					&& backendToTest.getAllGenres().contains("Musical")
-					&& backendToTest.getAllGenres().contains("Romance")) {
+			if (backendToTest.getGenres().size() == 3
+					&& backendToTest.getGenres().contains("Horror")
+					&& !backendToTest.getGenres().contains("Action")
+					&& backendToTest.getGenres().contains("Adventure")
+					&& backendToTest.getGenres().contains("Comedy")
+					&& !backendToTest.getGenres().contains("Musical")
+					&& !backendToTest.getGenres().contains("Romance")) {
 				// test passed
 				return true;
 			} else {
 				// test failed
+			  System.out.println(backendToTest.getAllGenres());
 				return false;
 			}
 		}
