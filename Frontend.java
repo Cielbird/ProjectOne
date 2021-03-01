@@ -25,7 +25,7 @@ public class Frontend {
      * @return "SELECTED" if the genre has been selected, "NOT SELECTED" otherwise
      */
     public static String genreStatus (Backend backend, String genre) {
-        List<String> selectedGenres = backend.getAvgRatings();
+        List<String> selectedGenres = backend.getGenres();
         
         if (selectedGenres.contains(genre)) {
             // genre found within the list of selected genres
@@ -133,7 +133,8 @@ public class Frontend {
                     if (genreStatus(backend, genreString).equals("SELECTED")) {
                         backend.removeGenre(genreString);
                     } else {
-                        backend.addGenre(genreString);
+                        System.out.println("ADDING GENRE: " + genreString);
+			backend.addGenre(genreString);
                     }
                     continue;
                 }
@@ -288,7 +289,7 @@ public class Frontend {
                 // If choice is a number, check if it is a valid rank and if so,
                 // scroll to that 
                 int rank = Integer.parseInt(choice);
-                if (rank > backend.getNumberOfMovies() || rank <= 0) {
+                if (rank > backend.getNumberOfMovies() || rank < 1) {
                     System.out.println("(No movies at that rank)\n");
                 } else {
                     // Display the movies at that rank
@@ -299,9 +300,11 @@ public class Frontend {
                     } else {
                         output = "";
                         // Display enumerated list of the top 3 movies
-                        for (int i = rank - 1; i < ranked.size(); i++) {
-                            output += (i + 1) + ". " + ranked.get(i).getTitle() + "\n";
-                        }
+			int currentRank = rank;
+			for(int i = 0; i < ranked.size(); i++){
+			    output += currentRank + ". " + ranked.get(i).getTitle() + "\n";
+			    currentRank++;
+			}
                     }
                     System.out.println(output);
                 }
