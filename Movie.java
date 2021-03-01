@@ -5,11 +5,9 @@
 // Role: data wrangler
 // TA: xinyi
 // Lecturer: florian heimerl
-// Notes to Grader: <optional extra notes>
 import java.util.List;
 
 public class Movie implements MovieInterface{
-//public class Movie {
 	
     private String title;
     private Integer year;
@@ -85,9 +83,9 @@ public class Movie implements MovieInterface{
 
 	// from super interface Comparable
 	public int compareTo(MovieInterface otherMovie){
-        if(otherMovie.getAvgVote() == this.getAvgVote()){
+        if(otherMovie.getAvgVote().equals(this.getAvgVote())){
             return 0;
-        } else if (otherMovie.getAvgVote() < this.getAvgVote()){
+        } else if (otherMovie.getAvgVote().compareTo(this.getAvgVote()) > 0){
             return 1;
         } else {
             return -1;
