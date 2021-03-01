@@ -213,48 +213,50 @@ public class Backend implements BackendInterface {
         // Empty the currentMatches
         currMatchesList = new ArrayList<MovieInterface>();
                
-        // Select all by rating first, then remove by genre
-        String[] allRatings = {"0","1","2","3","4","5","6","7","8","9","10"};
         
-        for(String rating: allRatings){
-          try{
-            currMatchesList.addAll(ratingTable.get(rating));
-          }
-          catch(Exception e){
-            // Comment out debug message before submitting
-            /*
-            System.out.println("DEBUG: No movie list found, no 
-              movies in the rating range " + rating + "-" + rating + ".999");
-            */
-          }
-        }
-        
-        Collections.sort(currMatchesList);
-        
-        // currMatchesList now contains all movies in the lists of the 
-        // selected ratings, sorted in descending order
-        
-        // Now we must go through the sorted List and remove and movies that
-        // do not have all of the selected genres
-        
-        // Create a list of movies with non-matching genres toRemove
-        // (This is necessary to avoid a ConcurrentModificationException)
-        List<MovieInterface> toRemove = new ArrayList<MovieInterface>();
-        
-        for(MovieInterface thisMovie: currMatchesList){
-            List<String> movieGenres = thisMovie.getGenres();
-            
-            for(String thisSelectedGenre: selectedGenres){
-              if(!movieGenres.contains(thisSelectedGenre)){
-                
-                // If thisMovie does not contain one of the genres currently selected, add it to the
-                // list of movies toRemove
-                toRemove.add(thisMovie);
-              } 
-            }
-        }
-        
-        currMatchesList.removeAll(toRemove);
+        //Below is commented out because when there are no ratings selected, matches should also be empty
+//        // Select all by rating first, then remove by genre
+//        String[] allRatings = {"0","1","2","3","4","5","6","7","8","9","10"};
+//        
+//        for(String rating: allRatings){
+//          try{
+//            currMatchesList.addAll(ratingTable.get(rating));
+//          }
+//          catch(Exception e){
+//            // Comment out debug message before submitting
+//            /*
+//            System.out.println("DEBUG: No movie list found, no 
+//              movies in the rating range " + rating + "-" + rating + ".999");
+//            */
+//          }
+//        }
+//        
+//        Collections.sort(currMatchesList);
+//        
+//        // currMatchesList now contains all movies in the lists of the 
+//        // selected ratings, sorted in descending order
+//        
+//        // Now we must go through the sorted List and remove and movies that
+//        // do not have all of the selected genres
+//        
+//        // Create a list of movies with non-matching genres toRemove
+//        // (This is necessary to avoid a ConcurrentModificationException)
+//        List<MovieInterface> toRemove = new ArrayList<MovieInterface>();
+//        
+//        for(MovieInterface thisMovie: currMatchesList){
+//            List<String> movieGenres = thisMovie.getGenres();
+//            
+//            for(String thisSelectedGenre: selectedGenres){
+//              if(!movieGenres.contains(thisSelectedGenre)){
+//                
+//                // If thisMovie does not contain one of the genres currently selected, add it to the
+//                // list of movies toRemove
+//                toRemove.add(thisMovie);
+//              } 
+//            }
+//        }
+//        
+//        currMatchesList.removeAll(toRemove);
 	      
 	      
 	    }
