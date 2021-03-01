@@ -133,7 +133,6 @@ public class Frontend {
                     if (genreStatus(backend, genreString).equals("SELECTED")) {
                         backend.removeGenre(genreString);
                     } else {
-                        System.out.println("ADDING GENRE: " + genreString);
 			backend.addGenre(genreString);
                     }
                     continue;
