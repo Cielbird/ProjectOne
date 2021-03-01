@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Scanner;
 import java.lang.Integer;
 
+/**
+ * The Frontend class is responsible for instantiating the frontend of the application
+ */
 public class Frontend {
     
     /**
