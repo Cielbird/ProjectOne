@@ -32,15 +32,22 @@ public class MovieDataReader implements MovieDataReaderInterface{
         String description;
         Float avg_vote;
 
-        // check for columns
+        // parse the header line to decode the columns
+
+        // store character from reader as int to evaluate
+        // .read() will throw IOException if one exists
         ch = inputFileReader.read();
+
+        // while the character is not a newline
         while(ch != 10){
             if(ch == 13){
                 // avoid carriage returns
             } else if(ch != 44){
+                // character isn't a comma, so we should add it
                 buffer += (char)(ch);
             } else {
-                // Part A
+                // the character is a comma, so let's see if this is an important column
+                // if so, set the corresponding value in column_index[] to our current size to mark it
                 if(buffer.equals("title")){
                     column_index[0] = column_elements.size();
                 }
@@ -59,13 +66,17 @@ public class MovieDataReader implements MovieDataReaderInterface{
                 if(buffer.equals("avg_vote")){
                     column_index[5] = column_elements.size();
                 }
+                // store buffer in column list to help with counting and debugging
                 column_elements.add(buffer);
+                // reset buffer
                 buffer = "";
             }
             // Continues loop
+            // .read() will throw IOException if one exists
             ch = inputFileReader.read();
         }
-        // Part A copy
+        // after the while loops exits, we still need to evaluate the buffer.
+        // this is a copy from above.
         if(buffer.equals("title")){
             column_index[0] = column_elements.size();
         }
@@ -87,21 +98,31 @@ public class MovieDataReader implements MovieDataReaderInterface{
         column_elements.add(buffer);
         buffer = "";
 
-        // for movies
+        // now, parse the rest of the file , converting each line into a Movie
+        // start onto the next line
+        // .read() will throw IOException if one exists
         ch = inputFileReader.read();
+        // while the character isn't the end of the file, there are movies to list
         while(ch != -1){
+            // while the character isn't a newline, we have a row to evaluate
             while(ch != 10){
                 if(ch == 13){
                     // be sad for carriage returns
                 } else if(ch == 34){
+                    // if we are a quotation mark, note that we should *open* the quotation
                     quotation_count++;
                 } else if(ch != 44 || quotation_count % 2 != 0){
+                    // if we aren't a comma, or a quotation is open, we should add to the buffer
                     buffer += (char)(ch);
                 } else if (quotation_count % 2 == 0){
+                    // if we have closed the quotation and we got this far, we are a comma
+                    // so we need to evaluate the buffer
+                    // if we are in the important columns, we will update the Movie to include us
                         if(column_index[0] == input_elements.size()){
                             movie.setTitle(buffer);
                         }
                         if(column_index[1] == input_elements.size()){
+                            // since this might not be an integer, use try/catch to ensure we have proper data format
                             try{
                                 Integer.valueOf(buffer);
                             } catch(NumberFormatException nfe) {
@@ -110,10 +131,13 @@ public class MovieDataReader implements MovieDataReaderInterface{
                             movie.setYear(Integer.valueOf(buffer));
                         }
                         if(column_index[2] == input_elements.size()){
+                            // initialize new list to wipe from previous values
                             List<String> genres = new ArrayList<String>();
-                            // System.out.println(buffer);
+                            // this buffer contains all of the genres, but we need them in a list
+                            // separate by commas
                             String[] pieces = buffer.split(",");
                             for(int i = 0;i<pieces.length;i++){
+                                // add to the list, with no whitespace on either side
                                 genres.add(pieces[i].strip());
                             }
                             movie.setGenres(genres);
@@ -125,6 +149,7 @@ public class MovieDataReader implements MovieDataReaderInterface{
                             movie.setDescription(buffer);
                         }
                         if(column_index[5] == input_elements.size()){
+                            // since this might not be a float, use try/catch to ensure we have proper data format
                             try{
                             Float.valueOf(buffer);
                             } catch(NumberFormatException nfe) {
@@ -132,14 +157,20 @@ public class MovieDataReader implements MovieDataReaderInterface{
                             }
                             movie.setAvgVote(Float.valueOf(buffer));
                         }
+                    // add buffer to list to track movement (and help debug)
                     input_elements.add(buffer);
+
+                    // clear buffer and reset quotation check
                     buffer = "";
                     quotation_count = 0;
                 }
                 // to continue loop
+                // .read() will throw IOException if one exists
                 ch = inputFileReader.read();
             }
-            // catch the last bit
+            
+            // after the while loops exits, we still need to evaluate the buffer.
+            // this is a copy from above.
             if(column_index[0] == input_elements.size()){
                             movie.setTitle(buffer);
                         }
@@ -172,41 +203,27 @@ public class MovieDataReader implements MovieDataReaderInterface{
                             movie.setAvgVote(Float.valueOf(buffer));
                         }
             input_elements.add(buffer);
-            buffer = "";
-            output_list.add(movie);
-            movie = new Movie();
+            
+            // now that the row has been parsed, see if we get the same size as our header
             if(input_elements.size() != column_elements.size()){
+                // if we haven't, there's a data format problem
                 throw new DataFormatException("Movie had "+input_elements.size()+"elements, not "+column_elements.size());
             }
+
+            // if we passed that test, we can add the movie to our output list
+            output_list.add(movie);
+
+            // reset all variables for next line
+            buffer = "";
+            movie = new Movie();
             input_elements.clear();
+
             // to continue loop
+            // .read() will throw IOException if one exists
             ch = inputFileReader.read();
         }
+
+        // since we've reached the end of the file, return the full list of Movies
         return output_list;
     }
-
-    // public static void main(String[] args){
-    //     List<MovieInterface> movieList = new ArrayList<MovieInterface>();
-    //     Reader string_reader;
-	// 	try {
-    //         string_reader = new StringReader(					"title,original_title,year,genre,duration,country,language,director,writer,production_company,actors,description,avg_vote\n"
-	// 				+ "The Source of Shadows,The Source of Shadows,2020,Horror,83,USA,English,\"Ryan Bury, Jennifer Bonior\",\"Jennifer Bonior, Trevor Botkin\",Four Thieves Productions,\"Ashleigh Allard, Tom Bonington, Eliane Gagnon, Marissa Kaye Grinestaff, Jenna Heffernan, Joshua Hummel, Janice Kingsley, Chris Labasbas, Jared Laufree, Dominic Lee, Vic May, Sienna Mazzone, Lizzie Mounter, Grace Mumm, Ashley Otis\",\"A series of stories woven together by one of our most primal fears, the fear of the unknown.\",3.5\n"
-	// 				+ "The Insurrection,The Insurrection,2020,Action,90,USA,English,Rene Perez,Rene Perez,,\"Michael Paré, Wilma Elles, Joseph Camilleri, Rebecca Tarabocchia, Jeanine Harrington, Malorie Glavan, Danner Boyd, Michael Cendejas, Woody Clendenen, Keely Dervin, Aaron Harvey, Tony Jackson, Michael Jarrod, Angelina Karo, Bernie Kelly\",The director of the largest media company wants to expose how left-wing powers use film to control populations.,2.9\n"
-	// 				+ "Valley Girl,Valley Girl,2020,\"Comedy, Musical, Romance\",102,USA,English,Rachel Lee Goldenberg,\"Amy Talkington, Andrew Lane\",Sneak Preview Productions,\"Jessica Rothe, Josh Whitehouse, Jessie Ennis, Ashleigh Murray, Chloe Bennet, Logan Paul, Mae Whitman, Mario Revolori, Rob Huebel, Judy Greer, Alex Lewis, Alex MacNicoll, Danny Ramirez, Andrew Kai, Allyn Rachel\",\"Set to a new wave '80s soundtrack, a pair of young lovers from different backgrounds defy their parents and friends to stay together. A musical adaptation of the 1983 film.\",5.4\n"
-	// 		);
-    //         MovieDataReader movieDataReader = new MovieDataReader();
-	// 		movieList = movieDataReader.readDataSet(string_reader);
-	// 	} catch (Exception e) {
-	// 		e.printStackTrace();
-	// 		// test failed
-	// 		System.out.println("Fail");
-	// 	}
-	// 	if (movieList.size() == 3) {
-	// 		// test passed
-	// 		System.out.println("Pass");
-	// 	} else {
-	// 		// test failed
-	// 		System.out.println("Fail");
-	// 	}
-    // } 
 }
