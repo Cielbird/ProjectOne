@@ -9,12 +9,15 @@ Team: Blue Team
 Files Written by Me:
 --------------------
 Backend.java
+TestBackend.java
 
 Additional Contributions:
 -------------------------
 I created a group Discord server with text and voice channels for
 each team to help manage communication with each group member's
 respective teams members.
+
+I also helped fix a slight bug with hash indexes in the Integration Manager's HashTableMap.java
 
 Signature:
 ----------
